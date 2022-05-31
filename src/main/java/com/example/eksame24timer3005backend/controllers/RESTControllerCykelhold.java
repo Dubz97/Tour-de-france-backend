@@ -18,7 +18,10 @@ public class RESTControllerCykelhold {
   @Autowired
   CykelholdRepository cykelholdRepository;
 
-
+  /**
+   * Henter en liste af alle cykelhold
+   * @return alle hold
+   */
   @GetMapping("/cykelhold")
   public List<Cykelhold> getAllCykelhold() {
     return cykelholdRepository.findAll();

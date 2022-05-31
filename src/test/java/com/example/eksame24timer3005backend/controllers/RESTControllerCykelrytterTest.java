@@ -41,7 +41,7 @@ public class RESTControllerCykelrytterTest {
   }
 
   /**
-   *
+   * Tester at metoden kan oprette en cykelrytter til vores DB, i dette tilfælde vores H2 DB. (application-test.properties)
    */
   @Test
   void postCykelrytter() {
@@ -68,6 +68,9 @@ public class RESTControllerCykelrytterTest {
 
   }
 
+  /**
+   * Tester at metoden kan slette en cykelrytter fra vores DB, i dette tilfælde vores H2 DB. (application-test.properties)
+   */
   @Test
   void deleteCykelrytter() {
     Cykelrytter cykelrytter = new Cykelrytter();
@@ -95,6 +98,9 @@ public class RESTControllerCykelrytterTest {
     assertThat(findRytter.isPresent()).isFalse();
   }
 
+  /**
+   * Tester at denne metode får en statuskode "NOT FOUND" hvis et forkert id bliver sendt
+   */
   @Test
   void deleteCykelrytterForkertId() {
     Cykelrytter cykelrytter = new Cykelrytter();

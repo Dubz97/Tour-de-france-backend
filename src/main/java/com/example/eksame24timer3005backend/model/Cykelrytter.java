@@ -22,7 +22,7 @@ public class Cykelrytter {
   private int alder;
 
   private String land;
-  @ManyToOne()
+  @ManyToOne
   @JoinColumn(name = "holdId")
   private Cykelhold cykelhold;
 

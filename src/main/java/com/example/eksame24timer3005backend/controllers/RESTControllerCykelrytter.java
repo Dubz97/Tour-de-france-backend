@@ -30,13 +30,23 @@ public class RESTControllerCykelrytter {
     return cykelrytterRepository.findAll();
   }
 
+  /**
+   * Metode til at oprette en cykelrytter
+   * @param cykelrytter
+   * @return cykelrytter
+   */
   @PostMapping("/create/cykelrytter")
   @ResponseStatus(HttpStatus.CREATED)
   public Cykelrytter postCykelrytter(@RequestBody Cykelrytter cykelrytter) {
     return cykelrytterRepository.save(cykelrytter);
   }
 
-
+  /**
+   * Metode til at update cykelrytter (Testest i Postman)
+   * @param id
+   * @param cykelrytter
+   * @return cykelrytter, samt StatusKode
+   */
   @PutMapping("/update/cykelrytter/{id}")
   public ResponseEntity<Cykelrytter> updateCykelrytter(
       @PathVariable int id, @RequestBody Cykelrytter cykelrytter) {
@@ -52,6 +62,11 @@ public class RESTControllerCykelrytter {
     }
   }
 
+  /**
+   * Slette en cykelrytter ud fra givent ID
+   * @param id
+   * @return success/failure besked samt statuskode
+   */
   @DeleteMapping("/delete/cykelrytter/{id}")
   public ResponseEntity<String> deleteCykelrytter(@PathVariable int id) {
     try {
@@ -62,6 +77,11 @@ public class RESTControllerCykelrytter {
     }
   }
 
+  /**
+   * Henter alle ryttere fra det holdid man giver
+   * @param holdId
+   * @return listen med de rigtige ryttere
+   */
   @GetMapping("/cykel/cykelhold/{holdId}")
   public List<Cykelrytter> getCykelrytterFraHold(@PathVariable int holdId) {
     List<Cykelrytter> obj = cykelrytterRepository.findAll();

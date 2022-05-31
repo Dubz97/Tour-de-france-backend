@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.event.annotation.BeforeTestMethod;
@@ -54,9 +56,11 @@ public class RESTControllerCykelrytterTest {
     Cykelhold cykelhold = new Cykelhold();
     cykelhold.setHoldNavn("Saxo");
     cykelhold.setHoldLand("Danmark");
+    cykelholdRepository.save(cykelhold);
     cykelrytter.setCykelhold(cykelhold);
 
     restControllerCykelrytter.postCykelrytter(cykelrytter);
+
 
     Optional<Cykelrytter> optionalCykelrytter = cykelrytterRepository.findById(cykelrytter.getRytterId());
     assertThat(optionalCykelrytter.isPresent()).isTrue();
@@ -67,7 +71,6 @@ public class RESTControllerCykelrytterTest {
   @Test
   void deleteCykelrytter() {
     Cykelrytter cykelrytter = new Cykelrytter();
-    cykelrytter.setRytterId(99);
     cykelrytter.setNavn("TestPerson");
     cykelrytter.setTotalTid(305);
     cykelrytter.setBjergpoint(2);
@@ -78,14 +81,44 @@ public class RESTControllerCykelrytterTest {
     Cykelhold cykelhold = new Cykelhold();
     cykelhold.setHoldNavn("Saxo");
     cykelhold.setHoldLand("Danmark");
+    cykelholdRepository.save(cykelhold);
     cykelrytter.setCykelhold(cykelhold);
+    cykelrytterRepository.save(cykelrytter);
 
-    restControllerCykelrytter.deleteCykelrytter(99);
+    int id = cykelrytter.getRytterId();
 
-    Optional<Cykelrytter> findRytter = cykelrytterRepository.findById(99);
+    ResponseEntity<String> response = restControllerCykelrytter.deleteCykelrytter(id);
 
+    Optional<Cykelrytter> findRytter = cykelrytterRepository.findById(id);
 
-// needs to get verified??
-//    assertThat(findRytter.isPresent()).isFalse();
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertThat(findRytter.isPresent()).isFalse();
+  }
+
+  @Test
+  void deleteCykelrytterForkertId() {
+    Cykelrytter cykelrytter = new Cykelrytter();
+    cykelrytter.setNavn("TestPerson");
+    cykelrytter.setTotalTid(305);
+    cykelrytter.setBjergpoint(2);
+    cykelrytter.setSpurtpoint(1);
+    cykelrytter.setAlder(19);
+    cykelrytter.setLand("Estland");
+
+    Cykelhold cykelhold = new Cykelhold();
+    cykelhold.setHoldNavn("Saxo");
+    cykelhold.setHoldLand("Danmark");
+    cykelholdRepository.save(cykelhold);
+    cykelrytter.setCykelhold(cykelhold);
+    cykelrytterRepository.save(cykelrytter);
+
+    int id = cykelrytter.getRytterId()+1;
+
+    ResponseEntity<String> response = restControllerCykelrytter.deleteCykelrytter(id);
+
+    Optional<Cykelrytter> findRytter = cykelrytterRepository.findById(id);
+
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    assertThat(findRytter.isPresent()).isFalse();
   }
 }
